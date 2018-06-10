@@ -4,6 +4,7 @@ import platform as _platform
 import re as _re
 import subprocess as _subprocess
 import time as _time
+from ..enums import Colour as _Colour
 
 from Prototyping.matrix import *
 
@@ -22,6 +23,8 @@ logger.addHandler(file_handler)
 
 _os.system("")
 _system = _platform.system()
+_version = _re.search(r"^\d+", _platform.version())
+_version = _version.group() if _version else False
 logger.info(_system)
 if _system == "Windows":
     _MONITOR_DIMS = "wmic path Win32_VideoController get CurrentHorizontalResolution^,CurrentVerticalResolution /format:Value"
@@ -41,6 +44,12 @@ if _system == "Windows":
 
     def PAUSE():
         _os.system("pause > nul")
+
+    # OFFSET CAUSED BECAUSE OF THE WINDOW HEADER <- take screen pos into consideration
+    if _version == "10":
+        _offset = [10, 75]
+    elif _version == "7":
+        _offset = [0, 65]
 
     # TEST IF ABLE TO USE REG QUERY
     if _subprocess.getstatusoutput(_FONT_DIMS)[0] != 0:
@@ -68,12 +77,9 @@ class Window:
         self.resize(width, height)
 
     def fullScreen(self):
+        global _offset
         screen_dims = Window.__get_monitor_dims()
-        # WHY IS THERE OFFSET?
-        offset = [10, 75]
-        # OFFSET CAUSED BECAUSE OF THE WINDOW HEADER <- take screen pos into consideration
-        # offset = [0, 65]
-        dims = [i - j for i, j in zip(screen_dims, offset)]
+        dims = [i - j for i, j in zip(screen_dims, _offset)]
         self.resize(*dims)
 
     def resize(self, width, height):
@@ -89,22 +95,22 @@ class Window:
 
         # Accounts for the indexing of the list starting at 0 and going to length - 1, width -1
         self.width, self.height = cols - 1, lines - 1
-        # return cols, lines
+
+    def setColour(self, colour=""):
+        print(_Colour.RESET + colour, end="")
 
     def setPixel(self, x, y, value):
         self.__pixels[x][y] = value
+
+    def addText(self, x, y, text):
+        for letter in text:
+            self.setPixel(x, y, letter)
 
     def flush(self):
         e = [[str(j) for j in i] for i in zip(*self.__pixels.elements)]
         CLEAR()
         print("\n".join("".join(i) for i in e))
 
-    def addText(self, x, y, text):
-        for letter in text:
-            self.setPixel(x, y, letter)
-
-    def setBackground(self, colourENUM):
-        pass
 
     @staticmethod
     def __get_monitor_dims():

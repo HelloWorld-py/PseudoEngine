@@ -34,4 +34,3 @@ class Colour:
 
 if __name__ == "__main__":
     print(Colour.B_CYAN + Colour.join(Colour.FOREGROUND, 34) + "ABC" + Colour.RESET)
-# "\u001b[48;5;{}m ".format(0))
