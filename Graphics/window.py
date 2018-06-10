@@ -25,7 +25,7 @@ _os.system("")
 _system = _platform.system()
 _version = _re.search(r"^\d+", _platform.version())
 _version = _version.group() if _version else False
-logger.info(_system)
+
 if _system == "Windows":
     _MONITOR_DIMS = "wmic path Win32_VideoController get CurrentHorizontalResolution^,CurrentVerticalResolution /format:Value"
     _FONT_DIMS = "REG QUERY HKEY_CURRENT_USER\Console /v FontSize"
@@ -184,6 +184,7 @@ class Window:
     def SetLogLevel(enum):
         try:
             logger.setLevel(enum)
+            logger.info(_system)
             return True
         except:
             return False
