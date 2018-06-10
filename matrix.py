@@ -21,6 +21,22 @@ class Matrix:
     def __getitem__(self, item):
         return self.elements[item]
 
+    def writeMatrix(self, other, x=0, y=0):
+        """
+        :param x: x offset
+        :param y: y offset
+        :type other: Matrix
+        :returns: None
+        """
+
+        for i in range(other.rows):
+            if 0 > i + x or i + x >= self.rows:
+                continue
+            for j in range(other.columns):
+                if 0 > j + y or j + y >= self.columns:
+                    continue
+                self[i + x][j + y] = other[i][j]
+
     @property
     def rows(self):
         return self.__rows
@@ -29,7 +45,10 @@ class Matrix:
     def columns(self):
         return self.__columns
 
+
 if __name__ == "__main__":
-    m = Matrix(10, 5)
+    m = Matrix(10, 5, "+")
+    print(m, "\n")
+    o = Matrix(5, 5, "0")
+    m.writeMatrix(o, 6, -1)
     print(m)
-    print(m[1][3])

@@ -8,6 +8,7 @@ class Logging:
 
 # http://www.lihaoyi.com/post/BuildyourownCommandLinewithANSIescapecodes.html
 
+# todo add RGB/RGBA Translation
 class Colour:
 
     FOREGROUND = "38;5;"

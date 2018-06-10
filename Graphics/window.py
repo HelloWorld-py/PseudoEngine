@@ -75,6 +75,7 @@ class Window:
 
         self.__pixels = None
         self.resize(width, height)
+        self.__background = None
 
     def fullScreen(self):
         global _offset
@@ -96,11 +97,34 @@ class Window:
         # Accounts for the indexing of the list starting at 0 and going to length - 1, width -1
         self.width, self.height = cols - 1, lines - 1
 
+    @property
+    def background(self):
+        return self.__background
+
+    @background.setter
+    def background(self, colour):
+        self.__background = colour
+
     def setColour(self, colour=""):
         print(_Colour.RESET + colour, end="")
 
-    def setPixel(self, x, y, value):
-        self.__pixels[x][y] = value
+    def resetColour(self):
+        self.setColour(self.__background)
+
+    def setPixel(self, x, y, value, colour=""):
+        if colour:
+            self.__pixels[x][y] = colour + str(value) + _Colour.RESET
+        else:
+            self.__pixels[x][y] = value
+
+    def pushMatrix(self, matrix, x=0, y=0):
+        """
+        :param x: x offset
+        :param y: y offset
+        :type matrix: Matrix
+        :returns: None
+        """
+        self.__pixels.writeMatrix(matrix, x, y)
 
     def addText(self, x, y, text):
         for letter in text:
