@@ -6,7 +6,7 @@ import subprocess as _subprocess
 import time as _time
 from ..enums import Colour as _Colour
 
-from Prototyping.matrix import *
+from Prototyping.matrix import Matrix as _Matrix
 
 logger = _logging.getLogger(__name__)
 
@@ -91,7 +91,7 @@ class Window:
 
         if self.__pixels:
             del self.__pixels
-        self.__pixels = Matrix(cols, lines)
+        self.__pixels = _Matrix(cols, lines)
 
         # Accounts for the indexing of the list starting at 0 and going to length - 1, width -1
         self.width, self.height = cols - 1, lines - 1

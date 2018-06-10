@@ -1,4 +1,4 @@
-from ._base import *
+from ._base import DeviceManager, UnpluggedError
 devices = DeviceManager()  # pylint: disable=invalid-name
 
 

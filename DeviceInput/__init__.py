@@ -1,7 +1,7 @@
 from pynput import keyboard as _keyboard
 from pynput import mouse as _mouse
-from PseudoEngine.DeviceInput.Gamepad import *
-from PseudoEngine.DeviceInput.IndexCodes import *
+from .Gamepad import get_gamepad as _get_gamepad
+from .IndexCodes import *
 from threading import Thread as _Thread
 # Gamepad is a stripped down inputs.py (mouse and keyboard handlers were not working)
 
@@ -105,7 +105,7 @@ def gamepad_handler(callback=None):
 
     def get_input():
         while True:
-            events = get_gamepad()
+            events = _get_gamepad()
 
             for event in events:
                 index = XCode.code_of(event.code)
