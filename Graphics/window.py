@@ -110,31 +110,28 @@ class Window:
 
         # Accounts for the indexing of the list starting at 0 and going to length - 1, width -1
         self.width, self.height = cols - 1, lines - 1
-        self.__coords = {i: [] for i in range(self.width)}
+        self.__coords = {i: [] for i in range(self.height)}
 
+    # todo: Fix the random not showing character bug.
     def flush(self):
         """ Flushes the pixels to the screen. Does this by setting a default of the background_tile
         and goes through the list of all pixels and adds to the screen if it exists"""
         CLEAR()
         out = ""
-        for x in range(self.width):
-            column = self.__coords.get(x, [])
+        for y in range(self.height):
+            row = self.__coords.get(y, [])
 
             line = ""
-            # print(x, column)
-            if not column:
-                out += self.__background_tile * self.height + "\n"
-                continue
-
-            for y in range(self.height):
-                if not column:
+            # print(y, row)
+            for x in range(self.width):
+                if not row:
                     line += self.__background_tile
-                elif column[0][0] == y:
-                    line += _Colour.RESET + column[0][1]
-                    column.pop(0)
+                elif row[0][0] == x:
+                    line += _Colour.RESET + row[0][1]
+                    row.pop(0)
                 else:
                     line += self.__background_tile
-            out += line + "\n"
+            out += line + _Colour.RESET + "\n"
         print(out)
 
     @property
@@ -153,14 +150,16 @@ class Window:
     #     self.setColour(None)
 
     def setPixel(self, x, y, value):
-        if x not in range(0, self.width):
+        if y not in range(0, self.height):
             return None
-        for i, coord in enumerate(self.__coords[x]):
-            if coord[0] >= y:
-                self.__coords[x].insert(i, (y, value))
+        for i, coord in enumerate(self.__coords[y]):
+            if coord[0] > x:
+                self.__coords[y].insert(i, (x, value))
                 break
+            elif coord[0] == x:
+                self.__coords[y][i] = (x, value)
         else:
-            self.__coords[x].append((y, value))
+            self.__coords[y].append((x, value))
 
     def pushMatrix(self, matrix, x=0, y=0):
         """
