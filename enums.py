@@ -1,3 +1,9 @@
+# Author: Jacob Tsekrekos
+# Date: Jun 1, 2018
+# File: enums.py
+# Description: Holds all enums for the Engine.
+
+
 class Logging:
     DEBUG = 10
     INFO = 20
@@ -7,7 +13,6 @@ class Logging:
 
 
 # http://www.lihaoyi.com/post/BuildyourownCommandLinewithANSIescapecodes.html
-
 # todo add RGB/RGBA Translation
 class Colour:
 
@@ -35,3 +40,4 @@ class Colour:
 
 if __name__ == "__main__":
     print(Colour.B_CYAN + Colour.join(Colour.FOREGROUND, 34) + "ABC" + Colour.RESET)
+

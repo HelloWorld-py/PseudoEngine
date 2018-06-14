@@ -1,11 +1,16 @@
+# Author: Jacob Tsekrekos
+# Date: Jun 13, 2018
+# File: window.py
+# Description: Main window class, does all back-end to get a console to act like a window
+
 import logging as _logging
 import os as _os
 import platform as _platform
 import re as _re
 import subprocess as _subprocess
 import time as _time
-from ..enums import Colour as _Colour
 
+from ..enums import Colour as _Colour
 
 # Making a logger for the window class
 logger = _logging.getLogger(__name__)
@@ -34,14 +39,18 @@ if _system == "Windows":
     _RE_VER_REZ = _re.compile("(?<=VerticalResolution=)\d{3,4}")
     _RE_FACE_NAME = _re.compile("(?<=REG_SZ\s{4})[\w ]+")
 
+
     def _NO_OUTPUT():
         _os.system("@echo off")
+
 
     def CLEAR():
         _os.system("cls")
 
+
     def PAUSE():
         _os.system("pause > nul")
+
 
     # OFFSET CAUSED BECAUSE OF THE WINDOW HEADER <- take screen pos into consideration
     if _version == "10":
@@ -101,7 +110,7 @@ class Window:
 
         # Accounts for the indexing of the list starting at 0 and going to length - 1, width -1
         self.width, self.height = cols - 1, lines - 1
-        self.__coords = {i:[] for i in range(self.width)}
+        self.__coords = {i: [] for i in range(self.width)}
 
     def flush(self):
         """ Flushes the pixels to the screen. Does this by setting a default of the background_tile
@@ -162,7 +171,7 @@ class Window:
         """
         for i in range(matrix.rows):
             for j in range(matrix.columns):
-                self.setPixel(i+x, j+y, matrix[i][j])
+                self.setPixel(i + x, j + y, matrix[i][j])
 
     def addText(self, x, y, text):
         for letter in text:
@@ -228,7 +237,7 @@ if __name__ == "__main__":
     w = Window(400, 400)
     w.fullScreen()
     w.setPixel(0, 0, "^")
-    w.setPixel(w.width, w.height,"$")
+    w.setPixel(w.width, w.height, "$")
     w.flush()
     i = 1
     j = 0
@@ -243,4 +252,4 @@ if __name__ == "__main__":
             j += 2
         if j > w.height:
             break
-        _time.sleep(1/60)
+        _time.sleep(1 / 60)

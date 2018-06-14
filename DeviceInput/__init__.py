@@ -1,7 +1,14 @@
+# Author: Jacob Tsekrekos
+# Date: Jun 1, 2018
+# File: DeviceInput.__init__.py
+# Description: Init for the DeviceInput module
+
 from pynput import keyboard as _keyboard
 from pynput import mouse as _mouse
 from .Gamepad import get_gamepad as _get_gamepad
-from .IndexCodes import *
+from .Gamepad import check_gamepad as _check_gamepad
+from .Gamepad import UnpluggedError as _UnpluggedError
+from .IndexCodes import ButtonCode, KeyCode, XCode
 from threading import Thread as _Thread
 # Gamepad is a stripped down inputs.py (mouse and keyboard handlers were not working)
 
@@ -42,7 +49,10 @@ gamepad = UpdateChecker()
 
 
 def keyboard_handler(callback=None):
-    """:returns an input thread"""
+    """
+    :returns an input thread
+    Call keyboard_handler.start() in order to start listening
+    """
     if callback is None:
         def callback():
             pass
@@ -64,6 +74,10 @@ def keyboard_handler(callback=None):
 
 
 def mouse_handler(callback=None):
+    """
+    :returns an input thread
+    Call mouse_handler.start() in order to start listening
+    """
     if callback is None:
         def callback():
             pass
@@ -90,20 +104,33 @@ def mouse_handler(callback=None):
 
 
 def gamepad_handler(callback=None):
+    """
+    :returns an input thread
+    Call keyboard_handler.start() in order to start listening
+    *NOTE* IF THERE IS NO CONTROLLER FOUND, the thread will exit
+    """
     if callback is None:
         def callback():
             pass
 
-    gamepad["D0"] = [0, 0]
-    gamepad["D1"] = [0, 0]
-    gamepad["D2"] = [0, 0]
-    gamepad["D3"] = [0, 0]
+    gamepad[XCode.DPAD0] = [0, 0]
+    gamepad[XCode.DPAD1] = [0, 0]
+    gamepad[XCode.DPAD2] = [0, 0]
+    gamepad[XCode.DPAD3] = [0, 0]
 
     # STICKS ARE BUGGED!!
-    gamepad["LSTICK"] = [0, 0]
-    gamepad["RSTICK"] = [0, 0]
+    gamepad[XCode.LSTICK] = [0, 0]
+    gamepad[XCode.RSTICK] = [0, 0]
+
+    if not _check_gamepad():
+        e = True
+        # todo: log that the gamepad thread will exit?
 
     def get_input():
+        if e:
+            print("No gamepad found")
+            exit(-1)
+
         while True:
             events = _get_gamepad()
 
@@ -118,13 +145,14 @@ def gamepad_handler(callback=None):
                 else:
                     gamepad[index] = event.state
 
-                if event.ev_type == "Absolute":
-                    callback()
-
-                elif event.ev_type == "Key":
-                    if event.state == 1:
-                        callback()
-                    elif event.state == 0:
-                        callback()
+                callback()
+                # if event.ev_type == "Absolute":
+                #     callback()
+                #
+                # elif event.ev_type == "Key":
+                #     if event.state == 1:
+                #         callback()
+                #     elif event.state == 0:
+                #         callback()
 
     return _Thread(target=get_input, name="Gamepad-Thread", daemon=True)

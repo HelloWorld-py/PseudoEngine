@@ -1,3 +1,4 @@
+# Dependencies: pynput, Pillow and all other associated package dependancies
 from .DeviceInput import *
 from .Graphics import Window
 from . import enums

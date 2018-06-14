@@ -1,9 +1,12 @@
-# 2018/04/20
-# todo: Add Documentation
+# Author: Jacob Tsekrekos
+# Date: Apr 20, 2018
+# File: IndexCodes.py
+# Description: All reference codes for button presses. Allows for a layer of abstraction between back-end and front-end
 
 from pynput import mouse as _mouse
-import re as _re
 
+
+# import re as _re
 # todo implement re?
 
 

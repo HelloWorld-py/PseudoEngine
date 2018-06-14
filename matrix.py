@@ -1,5 +1,8 @@
-# row-major
-# todo polish
+# Author: Jacob Tsekrekos
+# Date: Jun 1, 2018
+# File: matrix.py
+# Description: Matrix class to store 2-d arrays
+
 
 class Matrix:
     """
@@ -23,12 +26,14 @@ class Matrix:
 
     def writeMatrix(self, other, x=0, y=0):
         """
+        Writes another matrix on-top of the current matrix
         :param x: x offset
         :param y: y offset
         :type other: Matrix
         :returns: None
         """
 
+        # Use self.rows as the range instead?
         for i in range(other.rows):
             if 0 > i + x or i + x >= self.rows:
                 continue

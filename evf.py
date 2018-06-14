@@ -3,7 +3,6 @@
 # File: evf.py
 # Version 1.1 -> added Writer class, function that gets applied to all keys in the reader,
 #                convert values to appropriate types
-# Version
 
 """Interpreter for the Enclosed Variable File(.evf) format.
 This is a module to work with enclosed variable files (".evf"s).
