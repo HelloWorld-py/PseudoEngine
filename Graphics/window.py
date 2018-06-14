@@ -6,19 +6,16 @@ import subprocess as _subprocess
 import time as _time
 from ..enums import Colour as _Colour
 
-from Prototyping.matrix import Matrix as _Matrix
 
+# Making a logger for the window class
 logger = _logging.getLogger(__name__)
-
 logger.setLevel(_logging.DEBUG)
-
 file_handler = _logging.FileHandler("./graphics.log")
 file_handler.setFormatter(_logging.Formatter("%(asctime)s|[%(levelname)s] %(message)s"))
 
-
+logger.addHandler(file_handler)
 # todo add stream handler when able to open another console
 # stream_handler = _logging.StreamHandler()
-logger.addHandler(file_handler)
 # logger.addHandler(stream_handler)
 
 _os.system("")
@@ -26,6 +23,7 @@ _system = _platform.system()
 _version = _re.search(r"^\d+", _platform.version())
 _version = _version.group() if _version else False
 
+# if the OS is Windows set the appropriate commands
 if _system == "Windows":
     _MONITOR_DIMS = "wmic path Win32_VideoController get CurrentHorizontalResolution^,CurrentVerticalResolution /format:Value"
     _FONT_DIMS = "REG QUERY HKEY_CURRENT_USER\Console /v FontSize"
@@ -67,35 +65,68 @@ _RE_HEX = _re.compile(r"\b0x[\da-fA-F]+\b")
 
 class Window:
     def __init__(self, width, height):
+        """
+        Sets console's height and width based on the font size.
+        Stores the width and height in order to draw later
+        """
         _NO_OUTPUT()
         self.font_dims = Window.__get_font_info()
 
         self.width = None
         self.height = None
 
-        self.__pixels = None
+        # X: {Y: value)
+        self.__coords = None
         self.resize(width, height)
+        self.__background_tile = " "
         self.__background = None
+        # self.__colour = None
 
     def fullScreen(self):
+        """Takes the width and height of the screen in pixels and divides by the font dims to get a columns and rows.
+        columns and rows are sent to the resize function"""
         global _offset
         screen_dims = Window.__get_monitor_dims()
         dims = [i - j for i, j in zip(screen_dims, _offset)]
         self.resize(*dims)
 
     def resize(self, width, height):
+        """ Sets the size of the console """
         cols = width // self.font_dims[0]
         lines = height // self.font_dims[1]
+        # add in getstatusoutput to log errors more effectively?
         error = _subprocess.getoutput(_SET_SIZE.format(cols, lines + 2))
         if error:
             logger.warning(error)
 
-        if self.__pixels:
-            del self.__pixels
-        self.__pixels = _Matrix(cols, lines)
-
         # Accounts for the indexing of the list starting at 0 and going to length - 1, width -1
         self.width, self.height = cols - 1, lines - 1
+        self.__coords = {i:[] for i in range(self.width)}
+
+    def flush(self):
+        """ Flushes the pixels to the screen. Does this by setting a default of the background_tile
+        and goes through the list of all pixels and adds to the screen if it exists"""
+        CLEAR()
+        out = ""
+        for x in range(self.width):
+            column = self.__coords.get(x, [])
+
+            line = ""
+            # print(x, column)
+            if not column:
+                out += self.__background_tile * self.height + "\n"
+                continue
+
+            for y in range(self.height):
+                if not column:
+                    line += self.__background_tile
+                elif column[0][0] == y:
+                    line += _Colour.RESET + column[0][1]
+                    column.pop(0)
+                else:
+                    line += self.__background_tile
+            out += line + "\n"
+        print(out)
 
     @property
     def background(self):
@@ -104,18 +135,23 @@ class Window:
     @background.setter
     def background(self, colour):
         self.__background = colour
+        self.__background_tile = colour + " "
 
-    def setColour(self, colour=""):
-        print(_Colour.RESET + colour, end="")
+    # def setColour(self, colour):
+    #     self.__colour = colour
+    #
+    # def resetColour(self):
+    #     self.setColour(None)
 
-    def resetColour(self):
-        self.setColour(self.__background)
-
-    def setPixel(self, x, y, value, colour=""):
-        if colour:
-            self.__pixels[x][y] = colour + str(value) + _Colour.RESET
+    def setPixel(self, x, y, value):
+        if x not in range(0, self.width):
+            return None
+        for i, coord in enumerate(self.__coords[x]):
+            if coord[0] >= y:
+                self.__coords[x].insert(i, (y, value))
+                break
         else:
-            self.__pixels[x][y] = value
+            self.__coords[x].append((y, value))
 
     def pushMatrix(self, matrix, x=0, y=0):
         """
@@ -124,17 +160,13 @@ class Window:
         :type matrix: Matrix
         :returns: None
         """
-        self.__pixels.writeMatrix(matrix, x, y)
+        for i in range(matrix.rows):
+            for j in range(matrix.columns):
+                self.setPixel(i+x, j+y, matrix[i][j])
 
     def addText(self, x, y, text):
         for letter in text:
             self.setPixel(x, y, letter)
-
-    def flush(self):
-        e = [[str(j) for j in i] for i in zip(*self.__pixels.elements)]
-        CLEAR()
-        print("\n".join("".join(i) for i in e))
-
 
     @staticmethod
     def __get_monitor_dims():

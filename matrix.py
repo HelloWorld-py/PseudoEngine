@@ -46,6 +46,20 @@ class Matrix:
         return self.__columns
 
 
+# class PopMatrix(Matrix):
+#     __invalid = []
+#
+#     @property
+#     def indices(self):
+#         return [[x, y] for x in range(self.rows - 1) for y in range(self.columns - 1) if [x, y] not in self.__invalid]
+#
+#     def remove(self, index):
+#         self.__invalid.append(index)
+#
+#     def clear(self):
+#         self.__invalid = []
+
+
 if __name__ == "__main__":
     m = Matrix(10, 5, "+")
     print(m, "\n")
