@@ -80,6 +80,35 @@ def convert(o, t):
         raise error
 
 
+class Infinity:
+    def __ge__(self, other):
+        return True
+
+    def __lt__(self, other):
+        return False
+
+    def __eq__(self, other):
+        if isinstance(other, Infinity):
+            return True
+        else:
+            return False
+
+    def __le__(self, other):
+        return self == other
+
+    def __gt__(self, other):
+        return self != other
+
+    def __ne__(self, other):
+        return not self == other
+
+    def __str__(self):
+        return "\u221E"
+
+    def __repr__(self):
+        return str(self)
+
+
 class Number:
     """
     'Number' template class used to simplify classification of number-types in this module
@@ -625,10 +654,11 @@ class Vec3(Vector):
         self._z = z
 
 
+infinity = Infinity()
+
 if __name__ == "__main__":
     a = Vector.from_points((1, 2), (2, 3))
     b = Vec3(1, 3, 2)
 
     print(2 ** -1)
     print(Radical(2, Fraction(2, 3)).simplify())
-# todo: implement unittest

@@ -29,6 +29,7 @@ _version = _re.search(r"^\d+", _platform.version())
 _version = _version.group() if _version else False
 
 # if the OS is Windows set the appropriate commands
+# REG QUERY HKEY_CURRENT_USER\Console\%SystemRoot%_system32_cmd.exe
 if _system == "Windows":
     _MONITOR_DIMS = "wmic path Win32_VideoController get CurrentHorizontalResolution^,CurrentVerticalResolution /format:Value"
     _FONT_DIMS = "REG QUERY HKEY_CURRENT_USER\Console /v FontSize"
@@ -132,7 +133,7 @@ class Window:
                 else:
                     line += self.__background_tile
             out += line + _Colour.RESET + "\n"
-        print(out)
+        print(_Colour.RESET + out + _Colour.RESET)
 
     @property
     def background(self):
@@ -141,7 +142,7 @@ class Window:
     @background.setter
     def background(self, colour):
         self.__background = colour
-        self.__background_tile = colour + " "
+        self.__background_tile = colour + " " + _Colour.RESET
 
     # def setColour(self, colour):
     #     self.__colour = colour

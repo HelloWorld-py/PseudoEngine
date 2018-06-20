@@ -26,7 +26,7 @@ class UpdateChecker:
     def __getitem__(self, item):
         if self.__updated.__contains__(item):
             self.__updated.remove(item)
-        return self.__vals.get(item)
+        return self.__vals.get(item, None)
 
     def __str__(self):
         return str(self.__vals)
@@ -83,7 +83,7 @@ def mouse_handler(callback=None):
             pass
 
     def on_move(x, y):
-        mouse["Pos"] = (x, y)
+        mouse["pos"] = (x, y)
         callback()
 
     def on_click(x, y, button, pressed):
