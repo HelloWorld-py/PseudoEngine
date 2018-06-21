@@ -1,12 +1,16 @@
 # Author: Jacob Tsekrekos
 # Date: Jun 19, 2018
 # File: setup.py
-# Description: sets up the window dimensions to be used by the window class if REGEDIT is restricted or WMIC doesn't exist
-from ..DeviceInput import mouse_handler, mouse, ButtonCode
-from ..engine_math import infinity
-import os
+# Description: sets up the window dimensions to be used by the window class if REGEDIT is restricted or
+# WMIC doesn't exist
+from ..DeviceInput import mouse_handler as _mouse_handler
+from ..DeviceInput import mouse as _mouse
+from ..DeviceInput import ButtonCode as _ButtonCode
 
-screen_dims = [infinity, infinity]
+from ..engine_math import infinity as _infinity
+from os import system as __system
+
+screen_dims = [_infinity, _infinity]
 
 
 def screen_dims_auto():
@@ -15,30 +19,22 @@ def screen_dims_auto():
 
     def end():
         nonlocal ex
-        if mouse[ButtonCode.RIGHT]:
+        if _mouse[_ButtonCode.RIGHT]:
             ex = True
 
-    mouse_handler(end).start()
+    _mouse_handler(end).start()
 
     maxPos = [0, 0]
 
     while True:
         print("Right Click to exit.")
         print(maxPos)
-        os.system("cls")
+        __system("cls")
 
-        a = mouse["pos"]
+        a = _mouse["pos"]
         if not a:
             continue
 
-        # # Set min Pos
-        # if a[0] < minPos[0]:
-        #     minPos[0] = a[0]
-        #
-        # if a[1] < minPos[1]:
-        #     minPos[1] = a[1]
-
-        # setMaxPos
         if a[0] > maxPos[0] and a[0] % 16 == 0:
             maxPos[0] = a[0]
 
@@ -63,24 +59,24 @@ def screen_dims_manual():
             continue
 
 
-print("Please change your default font to be Consolas 16 (or another 8 x 16 font)")
-input("Ready? ")
+def run():
+    print("Please change your default font to be Consolas 16 (or another 8 x 16 font)")
+    input("Ready? ")
 
-choice = 0
-while True:
-    print("(1)Type screen dimensions or (2)find them with the mouse? (1 or 2) ")
-    try:
-        choice = int(input(""))
-        if choice not in [1, 2]:
-            raise TypeError()
-        break
-    except:
-        print("Invalid input. Try again")
+    while True:
+        print("(1)Type screen dimensions or (2)find them with the _mouse? (1 or 2) ")
+        try:
+            choice = int(input(""))
+            if choice not in [1, 2]:
+                raise TypeError()
+            break
+        except:
+            print("Invalid input. Try again")
 
-if choice == 1:
-    screen_dims_manual()
-else:
-    screen_dims_auto()
+    if choice == 1:
+        screen_dims_manual()
+    else:
+        screen_dims_auto()
 
-print(screen_dims)
-# todo: log screen dims
+    print(screen_dims)
+    # todo: log screen dims

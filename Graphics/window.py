@@ -3,7 +3,8 @@
 # File: window.py
 # Description: Main window class, does all back-end to get a console to act like a window
 
-import logging as _logging
+from ..utils.logger import Logger as _Logger
+from ..enums import Logging as _LoggingEnums
 import os as _os
 import platform as _platform
 import re as _re
@@ -12,16 +13,7 @@ import time as _time
 
 from ..enums import Colour as _Colour
 
-# Making a logger for the window class
-logger = _logging.getLogger(__name__)
-logger.setLevel(_logging.DEBUG)
-file_handler = _logging.FileHandler("./graphics.log")
-file_handler.setFormatter(_logging.Formatter("%(asctime)s|[%(levelname)s] %(message)s"))
-
-logger.addHandler(file_handler)
-# todo add stream handler when able to open another console
-# stream_handler = _logging.StreamHandler()
-# logger.addHandler(stream_handler)
+logger = _Logger(__name__, _LoggingEnums.ERROR, "graphics.log")
 
 _os.system("")
 _system = _platform.system()
@@ -90,7 +82,6 @@ class Window:
         self.resize(width, height)
         self.__background_tile = " "
         self.__background = None
-        # self.__colour = None
 
     def fullScreen(self):
         """Takes the width and height of the screen in pixels and divides by the font dims to get a columns and rows.
@@ -107,7 +98,7 @@ class Window:
         # add in getstatusoutput to log errors more effectively?
         error = _subprocess.getoutput(_SET_SIZE.format(cols, lines + 2))
         if error:
-            logger.warning(error)
+            logger.error(error)
 
         # Accounts for the indexing of the list starting at 0 and going to length - 1, width -1
         self.width, self.height = cols - 1, lines - 1
