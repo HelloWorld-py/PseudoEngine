@@ -55,7 +55,6 @@ class Reader:
             keyFunc = lambda __key: __key
 
         file = open(fileName, "r")
-        self.__file = file
         info = {}
 
         f_c = file.read() + " "
@@ -94,9 +93,7 @@ class Reader:
 
         self.__info = info
         self.__keys = [key for key in info.keys()]
-
-    def __del__(self):
-        self.__file.close()
+        file.close()
 
     def __iter__(self):
         self.__current_pos = 0
@@ -152,18 +149,18 @@ class Writer:
 
         self.__file = open(fileName, "w")
 
-    def write_from_globals(self, **vars_names):
-        """
-        only works if the file contains this class
-        """
-        # todo find a way to import this and get the new global scope
-        with self.__file as outFile:
-            for entry in vars_names:
-                name = vars_names[entry] if vars_names[entry] is not None else entry
-                if entry not in globals():
-                    print("[Warning] Variable '{}' is undefined".format(entry))
-                else:
-                    outFile.write("[{}]{}\n".format(name, globals()[entry]))
+    # def write_from_globals(self, **vars_names):
+    #     """
+    #     only works if the file contains this class
+    #     """
+    #     # todo find a way to import this and get the new global scope
+    #     with self.__file as outFile:
+    #         for entry in vars_names:
+    #             name = vars_names[entry] if vars_names[entry] is not None else entry
+    #             if entry not in globals():
+    #                 print("[Warning] Variable '{}' is undefined".format(entry))
+    #             else:
+    #                 outFile.write("[{}]{}\n".format(name, globals()[entry]))
 
     def write(self, **vars_vals):
         with self.__file as outFile:
