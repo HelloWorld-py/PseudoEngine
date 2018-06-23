@@ -20,7 +20,7 @@ class Window:
         Sets console's height and width based on the font size.
         Stores the width and height in order to draw later
         """
-        self.font_dims = FONT_DIMS
+        self.font_dims = FONT_DIMS()
 
         self.width = None
         self.height = None
@@ -34,7 +34,7 @@ class Window:
     def fullScreen(self):
         """Takes the width and height of the screen in pixels and divides by the font dims to get a columns and rows.
         columns and rows are sent to the resize function"""
-        dims = [i - j for i, j in zip(SCREEN_DIMS, OFFSET)]
+        dims = [i - j for i, j in zip(SCREEN_DIMS(), OFFSET())]
         self.resize(*dims)
 
     def resize(self, width, height):
