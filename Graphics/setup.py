@@ -13,12 +13,35 @@ import subprocess as _subprocess
 
 logger = _Logger(__name__, _LoggingEnums.ERROR, "graphics.log")
 
-# Defaults and variable declaration for use in window.py
-FONT_FACE = "Consolas"
-FONT_DIMS = 8, 16
-SCREEN_DIMS = None
-DEFAULT_POSITION = 0, 0
-OFFSET = 0, 0
+# Defaults and variable declaration for use in setup.py
+__font_face = "Consolas"
+__font_dims = 8, 16
+__screen_dims = None
+__default_pos = 0, 0
+__offset = 0, 0
+
+
+# Getters for local variables
+def FONT_FACE():
+    return __font_face
+
+
+def FONT_DIMS():
+    return __font_dims
+
+
+def SCREEN_DIMS():
+    return __screen_dims
+
+
+def DEFAULT_POSITION():
+    return __default_pos
+
+
+def OFFSET():
+    return __offset
+
+
 CMD_SET_SIZE = None
 
 SYSTEM = _platform.system()
@@ -65,10 +88,10 @@ if SYSTEM == "Windows":
 
 
     if _version == "10":
-        OFFSET = 10, 75
+        __offset = 10, 75
 
     elif _version == "7":
-        OFFSET = 0, 65
+        __offset = 0, 65
 else:
     # For other platforms, ensure a command that stops output is called
     # Below code is technically superfluous but it stops the IDE from getting confused
@@ -85,7 +108,7 @@ else:
 
 
 def _get_font_info():
-    global FONT_DIMS, FONT_FACE
+    global __font_dims, __font_face
 
     # font_height only uses 4 upper bits for ttf fonts
     if _reg_readable:
@@ -101,18 +124,23 @@ def _get_font_info():
 
     logger.debug("Font size: {}x{}".format(font_width, font_height))
 
-    FONT_DIMS = font_width, font_height
-    FONT_FACE = face_name
+    __font_dims = font_width, font_height
+    __font_face = face_name
 
 
 def _get_default_position():
-    global DEFAULT_POSITION
+    global __default_pos
     # upper 4 digits used for top, lower 4 digits used for left
     if not _reg_readable:
         return 0, 0
 
     raw_pos = _subprocess.getoutput(_CMD_DEFAULT_POS)
-    pos = "{:08X}".format(int(_re.search(_RE_HEX, raw_pos).group(), 16))
+
+    if _re.search(_RE_HEX, raw_pos):
+        pos = "{:08X}".format(int(_re.search(_RE_HEX, raw_pos).group(), 16))
+    else:
+        return 0, 0
+
     top = int(pos[:-4], 16)
     left = int(pos[-4:], 16)
 
@@ -121,7 +149,7 @@ def _get_default_position():
     if left > 65530:
         left = -(65536 - left)
 
-    return top, left
+    __default_pos = top, left
 
 
 def __screen_dims_mouse():
@@ -185,7 +213,7 @@ def __screen_dims_auto():
 
 
 def _get_screen_info():
-    global SCREEN_DIMS
+    global __screen_dims
 
     screen_dims = __screen_dims_auto()
     if not screen_dims:
@@ -204,7 +232,7 @@ def _get_screen_info():
         else:
             screen_dims = __screen_dims_mouse()
 
-    SCREEN_DIMS = screen_dims
+    __screen_dims = screen_dims
 
 
 def setup():
