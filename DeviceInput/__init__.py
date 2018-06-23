@@ -10,8 +10,10 @@ from .Gamepad import check_gamepad as _check_gamepad
 from .Gamepad import UnpluggedError as _UnpluggedError
 from .IndexCodes import ButtonCode, KeyCode, XCode
 from threading import Thread as _Thread
+from ..utils.logger import Logger
 # Gamepad is a stripped down inputs.py (mouse and keyboard handlers were not working)
 
+logger = Logger(__name__, Logger.ERROR, "input.log")
 
 # todo fix 2d checking (ACCESS)
 class UpdateChecker:
@@ -124,11 +126,10 @@ def gamepad_handler(callback=None):
 
     if not _check_gamepad():
         e = True
-        # todo: log that the gamepad thread will exit?
+        logger.ERROR("No gamepad found, thread exiting.")
 
     def get_input():
         if e:
-            print("No gamepad found")
             exit(-1)
 
         while True:
@@ -146,13 +147,5 @@ def gamepad_handler(callback=None):
                     gamepad[index] = event.state
 
                 callback()
-                # if event.ev_type == "Absolute":
-                #     callback()
-                #
-                # elif event.ev_type == "Key":
-                #     if event.state == 1:
-                #         callback()
-                #     elif event.state == 0:
-                #         callback()
 
     return _Thread(target=get_input, name="Gamepad-Thread", daemon=True)

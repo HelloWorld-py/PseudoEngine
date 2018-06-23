@@ -3,14 +3,13 @@
 # File: window.py
 # Description: Main window class, does all back-end to get a console to act like a window
 import subprocess as _subprocess
-import time as _time
 
 from ..enums import Colour as _Colour
-from ..enums import Logging as _Logging
 from .setup import *
 
 logger.name = __name__
-logger.setLevel(_Logging.ERROR)
+logger.setLevel(Logger.ERROR)
+
 setup()
 
 
@@ -136,4 +135,3 @@ if __name__ == "__main__":
             j += 2
         if j > w.height:
             break
-        _time.sleep(1 / 60)

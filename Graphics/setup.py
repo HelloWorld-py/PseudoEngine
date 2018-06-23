@@ -4,14 +4,13 @@
 # Description: Gets all required information to allow the game engine to run. Call setup in the window class to get all
 # information
 
-from ..utils.logger import Logger as _Logger
-from ..enums import Logging as _LoggingEnums
+from ..utils.logger import Logger
 import re as _re
 import os as _os
 import platform as _platform
 import subprocess as _subprocess
 
-logger = _Logger(__name__, _LoggingEnums.ERROR, "graphics.log")
+logger = Logger(__name__, Logger.ERROR, "graphics.log")
 
 # Defaults and variable declaration for use in setup.py
 __font_face = "Consolas"
