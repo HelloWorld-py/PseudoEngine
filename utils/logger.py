@@ -15,6 +15,12 @@ _os.chdir("./_logs")
 
 
 class Logger(_logging.Logger):
+    DEBUG = 10
+    INFO = 20
+    WARNING = 30
+    ERROR = 40
+    CRITICAL = 50
+
     def __init__(self, name, level, log_file, format_str=None):
         """
         :type name: str         :param name:  Specifies the name of the logger, traditionally __name__
