@@ -1,0 +1,3 @@
+1: Change colour setting to be automatic if the version is windows 7 or below
+2: Make into a Python package so dependancies will automatically be installed
+3: Make a sound handler

@@ -11,8 +11,6 @@ if _os.getcwd() == '__main__':
 if not _os.path.exists("./_logs"):
     _os.mkdir("./_logs")
 
-_os.chdir("./_logs")
-
 
 class Logger(_logging.Logger):
     DEBUG = 10
@@ -31,7 +29,7 @@ class Logger(_logging.Logger):
         """
         super().__init__(name, level)
         log_file = _os.path.basename(log_file)
-        file_handler = _logging.FileHandler(log_file)
+        file_handler = _logging.FileHandler("./_logs/" + log_file)
 
         if not format_str:
             format_str = "%(asctime)s|[%(levelname)s] %(message)s"
