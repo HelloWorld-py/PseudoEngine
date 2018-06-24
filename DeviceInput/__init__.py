@@ -126,7 +126,7 @@ def gamepad_handler(callback=None):
 
     if not _check_gamepad():
         e = True
-        logger.ERROR("No gamepad found, thread exiting.")
+        logger.error("No gamepad found, thread exiting.")
 
     def get_input():
         if e:
