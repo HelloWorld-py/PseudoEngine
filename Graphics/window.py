@@ -69,6 +69,7 @@ class Window:
                 else:
                     line += self.__background_tile
             out += line + _Colour.RESET + "\n"
+            self.__coords[y] = []
         print(_Colour.RESET + out + _Colour.RESET)
 
     @property
@@ -89,6 +90,7 @@ class Window:
                 break
             elif coord[0] == x:
                 self.__coords[y][i] = (x, value)
+                break
         else:
             self.__coords[y].append((x, value))
 
