@@ -124,6 +124,7 @@ def gamepad_handler(callback=None):
     gamepad[XCode.LSTICK] = [0, 0]
     gamepad[XCode.RSTICK] = [0, 0]
 
+    e = False
     if not _check_gamepad():
         e = True
         logger.error("No gamepad found, thread exiting.")
@@ -146,6 +147,6 @@ def gamepad_handler(callback=None):
                 else:
                     gamepad[index] = event.state
 
-                callback()
+            callback()
 
     return _Thread(target=get_input, name="Gamepad-Thread", daemon=True)
