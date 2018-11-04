@@ -13,7 +13,7 @@ from threading import Thread as _Thread
 from ..utils.logger import Logger
 # Gamepad is a stripped down inputs.py (mouse and keyboard handlers were not working)
 
-logger = Logger(__name__, Logger.ERROR, "input.log")
+__logger = Logger(__name__, Logger.ERROR, "input.log")
 
 # todo fix 2d checking (ACCESS)
 class UpdateChecker:
@@ -127,7 +127,7 @@ def gamepad_handler(callback=None):
     e = False
     if not _check_gamepad():
         e = True
-        logger.error("No gamepad found, thread exiting.")
+        __logger.error("No gamepad found, thread exiting.")
 
     def get_input():
         if e:

@@ -235,6 +235,8 @@ class Fraction(Number):
         f_nom = superscript(self.__numer) if self.__numer >= 0 else "-" + superscript(-self.__numer)
         return "{}\u2044{}".format(f_nom, subscript(self.__denom))
 
+    def __repr__(self):
+        return str(self)
     def __neg__(self):
         return Fraction(-self.__numer, self.__denom)
 
@@ -416,6 +418,9 @@ class Radical(Number):
             f_coef += str(self.__coefficient) + "\u00b7" if self.__coefficient != -1 else "-"
         return "{}{}√({}{})".format(f_coef, f_order, self.__base, f_exponent)
 
+    def __repr__(self):
+        return str(self)
+
     def _make_type(self, o):
         return Radical(o ** self.__root_order, self.__root_order)
 
@@ -441,6 +446,9 @@ class Exact(Number):
         for i in self.__components[1:]:
             out += ("+" if i > 0 else "") + i
         return out
+
+    def __repr__(self):
+        return str(self)
 
 
 class Vector:
@@ -605,6 +613,9 @@ class Vec2(Vector):
     def __str__(self):
         return "({},{})".format(self._x, self._y)
 
+    def __repr__(self):
+        return str(self)
+
     @property
     def x(self):
         return self._x
@@ -629,6 +640,8 @@ class Vec3(Vector):
     def __str__(self):
         return "({}, {}, {})".format(self._x, self._y, self._z)
 
+    def __repr__(self):
+        return str(self)
     @property
     def x(self):
         return self._x
