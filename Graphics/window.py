@@ -13,7 +13,11 @@ logger.setLevel(Logger.ERROR)
 
 setup()
 
-# implement a contant update (25 frames/second) that only affects graphics
+# implement a content update (25 frames/second) that only affects graphics
+# todo: add an update method that run when the window is "started"
+# update tries to update the screen at a fixed rate
+# This means that a new buffer may be needed to hold the current screen?
+
 
 class Window:
     def __init__(self, width, height):
@@ -51,12 +55,14 @@ class Window:
         self.width, self.height = cols - 1, lines - 1
         self.__coords = {i: [] for i in range(self.height)}
 
-    # FIXED?: Fix the random not showing character bug.
     def flush(self):
         """ Flushes the pixels to the screen. Does this by setting a default of the background_tile
         and goes through the list of all pixels and adds to the screen if it exists"""
 
-        # Note a screen clear is not neccesary because each element in the current buffer is already being written to
+        # Note a screen clear is not necessary because each element in the current buffer is already being written to
+        # however this causes the screen to occasionally "jump" whereas the screen clear causes it to flicker...
+        # Find a way to fix this???
+        CLEAR()
 
         out = ""
         for y in range(self.height):
