@@ -6,12 +6,14 @@ import subprocess as _subprocess
 
 from ..enums import Colour as _Colour
 from .setup import *
+import time
 
 logger.name = __name__
 logger.setLevel(Logger.ERROR)
 
 setup()
 
+# implement a contant update (25 frames/second) that only affects graphics
 
 class Window:
     def __init__(self, width, height):
@@ -49,11 +51,13 @@ class Window:
         self.width, self.height = cols - 1, lines - 1
         self.__coords = {i: [] for i in range(self.height)}
 
-    # todo: Fix the random not showing character bug.
+    # FIXED?: Fix the random not showing character bug.
     def flush(self):
         """ Flushes the pixels to the screen. Does this by setting a default of the background_tile
         and goes through the list of all pixels and adds to the screen if it exists"""
-        CLEAR()
+
+        # Note a screen clear is not neccesary because each element in the current buffer is already being written to
+
         out = ""
         for y in range(self.height):
             row = self.__coords.get(y, [])
