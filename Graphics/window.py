@@ -127,23 +127,3 @@ class Window:
         except:
             return False
 
-
-if __name__ == "__main__":
-    w = Window(400, 400)
-    w.fullScreen()
-    w.setPixel(0, 0, "^")
-    w.setPixel(w.width, w.height, "$")
-    w.flush()
-    i = 1
-    j = 0
-
-    while True:
-        w.setPixel(i, j, "+")
-        w.flush()
-        w.setPixel(i, j, " ")
-        i += 2
-        if i > w.width:
-            i = 0
-            j += 2
-        if j > w.height:
-            break
